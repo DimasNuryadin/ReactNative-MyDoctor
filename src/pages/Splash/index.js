@@ -1,8 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ILLogo } from '../../assets';
 
-export default function Splash() {
+// Props yang disediakan react navigation
+export default function Splash({ navigation }) {
+  useEffect(() => {
+    setTimeout(() => {
+      // replace() = user tidak bisa kembali ke page ini ketika tombol back ditekan, karena tidak menyimpan history sebelumnya
+      navigation.replace('GetStarted');
+    }, 3000);
+  }, [navigation]);
+
   return (
     <View style={styles.page}>
       <ILLogo />
