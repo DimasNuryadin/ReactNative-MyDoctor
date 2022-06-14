@@ -9,7 +9,8 @@ const Stack = createNativeStackNavigator();
 
 const Router = () => {
   return (
-    <Stack.Navigator initialRouteName="Register">
+    // initialRouteName="Register"
+    <Stack.Navigator>
       <Stack.Screen
         name="Splash"
         component={Splash}
