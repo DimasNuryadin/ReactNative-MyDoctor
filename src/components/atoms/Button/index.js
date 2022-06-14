@@ -1,8 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { colors } from '../../../utils';
+import IconOnly from './iconOnly';
 
-export default function Button({ type, title, onPress }) {
+export default function Button({ type, title, onPress, icon }) {
+  if (type === 'icon-only') {
+    return <IconOnly icon={icon} onPress={onPress} />;
+  }
   return (
     // Akan menggantikan komponen view
     <TouchableOpacity style={styles.container(type)} onPress={onPress}>

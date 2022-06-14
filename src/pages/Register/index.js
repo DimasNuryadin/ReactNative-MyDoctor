@@ -3,11 +3,11 @@ import React from 'react';
 import { Button, Gap, Header, Input } from '../../components';
 import { colors } from '../../utils';
 
-export default function Register() {
+export default function Register({ navigation }) {
   return (
     <View style={styles.page}>
       <View>
-        <Header />
+        <Header onPress={() => navigation.goBack()} title="Daftar Akun" />
       </View>
       <View style={styles.content}>
         <Input label="Full Name" />
