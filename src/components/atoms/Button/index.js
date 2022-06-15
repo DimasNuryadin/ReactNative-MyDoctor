@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { colors } from '../../../utils';
+import { colors, fonts } from '../../../utils';
 import IconOnly from './iconOnly';
 
 export default function Button({ type, title, onPress, icon }) {
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   }),
   text: type => ({
-    fontFamily: 'Nunito-SemiBold',
+    fontFamily: fonts.primary[600],
     fontSize: 18,
     textAlign: 'center',
     color:
