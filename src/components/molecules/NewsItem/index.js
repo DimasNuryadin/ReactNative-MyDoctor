@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     paddingBottom: 12,
     paddingTop: 16,
+    paddingHorizontal: 16,
   },
   titleWrapper: {
     flex: 1,

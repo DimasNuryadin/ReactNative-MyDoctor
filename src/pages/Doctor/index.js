@@ -42,10 +42,10 @@ export default function Doctor() {
             <RatedDoctor />
             <RatedDoctor />
             <Text style={styles.sectionLabel}>Good News</Text>
-            <NewsItems />
-            <NewsItems />
-            <NewsItems />
           </View>
+          <NewsItems />
+          <NewsItems />
+          <NewsItems />
           <Gap height={30} />
         </ScrollView>
       </View>
