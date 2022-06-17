@@ -1,18 +1,18 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { colors, fonts } from '../../../utils';
 import { ICNext } from '../../../assets';
 
-export default function ListDoctor({ profile, name, desc, type }) {
+export default function ListDoctor({ profile, name, desc, type, onPress }) {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={profile} style={styles.avatar} />
       <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.desc}>{desc}</Text>
       </View>
       {type === 'next' && <ICNext />}
-    </View>
+    </TouchableOpacity>
   );
 }
 

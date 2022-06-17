@@ -14,30 +14,35 @@ export default function ChooseDoctor({ navigation }) {
       />
       <ListDoctor
         type="next"
+        onPress={() => navigation.navigate('Chatting')}
         profile={DummyDoctor1}
         name="Alexander Jannie"
         desc="Wanita"
       />
       <ListDoctor
         type="next"
+        onPress={() => navigation.navigate('Chatting')}
         profile={DummyDoctor1}
         name="Alexander Jannie"
         desc="Wanita"
       />
       <ListDoctor
         type="next"
+        onPress={() => navigation.navigate('Chatting')}
         profile={DummyDoctor1}
         name="Alexander Jannie"
         desc="Wanita"
       />
       <ListDoctor
         type="next"
+        onPress={() => navigation.navigate('Chatting')}
         profile={DummyDoctor1}
         name="Alexander Jannie"
         desc="Wanita"
       />
       <ListDoctor
         type="next"
+        onPress={() => navigation.navigate('Chatting')}
         profile={DummyDoctor1}
         name="Alexander Jannie"
         desc="Wanita"
