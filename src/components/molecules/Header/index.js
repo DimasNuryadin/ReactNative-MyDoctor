@@ -2,8 +2,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Button, Gap } from '../../atoms';
 import { colors, fonts } from '../../../utils';
+import DarkProfile from './DarkProfile';
 
 export default function Header({ onPress, title, type }) {
+  if (type === 'dark-profile') {
+    return <DarkProfile onPress={onPress} />;
+  }
   return (
     <View style={styles.container(type)}>
       {/* <ICBackDark /> */}
