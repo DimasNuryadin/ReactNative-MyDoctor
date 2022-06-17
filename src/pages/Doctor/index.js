@@ -10,7 +10,7 @@ import {
 import { colors, fonts } from '../../utils';
 import { JSONCategoryDoctor } from '../../assets';
 
-export default function Doctor() {
+export default function Doctor({ navigation }) {
   return (
     <View style={styles.page}>
       <View style={styles.content}>
@@ -23,16 +23,20 @@ export default function Doctor() {
             </Text>
           </View>
 
-          <View style={styles.wrapperScroll}>
+          <View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.category}>
-                <Gap width={32} />
+                <Gap width={16} />
                 {JSONCategoryDoctor.data.map(item => {
                   return (
-                    <DoctorCategory key={item.id} category={item.category} />
+                    <DoctorCategory
+                      key={item.id}
+                      category={item.category}
+                      onPress={() => navigation.navigate('ChooseDoctor')}
+                    />
                   );
                 })}
-                <Gap width={22} />
+                <Gap width={6} />
               </View>
             </ScrollView>
           </View>
@@ -74,9 +78,6 @@ const styles = StyleSheet.create({
   },
   category: {
     flexDirection: 'row',
-  },
-  wrapperScroll: {
-    marginHorizontal: -16,
   },
   wrapperSection: {
     paddingHorizontal: 16,

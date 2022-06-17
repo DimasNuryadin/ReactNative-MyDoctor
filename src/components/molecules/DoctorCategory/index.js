@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import {
   ILCatAnak,
@@ -8,7 +8,7 @@ import {
 } from '../../../assets';
 import { colors, fonts } from '../../../utils';
 
-export default function DoctorCategory({ category }) {
+export default function DoctorCategory({ category, onPress }) {
   const Icon = () => {
     if (category === 'dokter umum') {
       return <ILCatUmum />;
@@ -26,11 +26,11 @@ export default function DoctorCategory({ category }) {
   };
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Icon />
       <Text style={styles.label}>Saya butuh</Text>
       <Text style={styles.category}>{category}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

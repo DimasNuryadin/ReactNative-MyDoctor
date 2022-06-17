@@ -13,6 +13,7 @@ import {
   Doctor,
   Messages,
   Hospitals,
+  ChooseDoctor,
 } from '../pages';
 
 // Stack Navigation
@@ -73,6 +74,11 @@ const Router = () => {
       <Stack.Screen
         name="MainApp"
         component={MainApp}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChooseDoctor"
+        component={ChooseDoctor}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
