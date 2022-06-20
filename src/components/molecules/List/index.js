@@ -1,12 +1,33 @@
 import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { colors, fonts } from '../../../utils';
-import { ICNext } from '../../../assets';
+import {
+  ICEditProfile,
+  ICHelp,
+  ICLanguage,
+  ICNext,
+  ICRate,
+} from '../../../assets';
 
-export default function ListDoctor({ profile, name, desc, type, onPress }) {
+export default function List({ profile, name, desc, type, onPress, icon }) {
+  const Icon = () => {
+    if (icon === 'edit-profile') {
+      return <ICEditProfile />;
+    }
+    if (icon === 'language') {
+      return <ICLanguage />;
+    }
+    if (icon === 'rate') {
+      return <ICRate />;
+    }
+    if (icon === 'help') {
+      return <ICHelp />;
+    }
+    return <ICEditProfile />;
+  };
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={profile} style={styles.avatar} />
+      {icon ? <Icon /> : <Image source={profile} style={styles.avatar} />}
       <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.desc}>{desc}</Text>
@@ -29,10 +50,10 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 46 / 2,
-    marginRight: 16,
   },
   content: {
     flex: 1,
+    marginLeft: 16,
   },
   name: {
     fontSize: 16,
