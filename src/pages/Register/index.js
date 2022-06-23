@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Gap, Header, Input } from '../../components';
 import { colors, useForm } from '../../utils';
 
