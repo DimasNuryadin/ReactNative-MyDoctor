@@ -5,6 +5,9 @@ import { colors, useForm } from '../../utils';
 // Import Firebase
 import '../../config';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, set } from 'firebase/database';
+
+import { showMessage } from 'react-native-flash-message';
 
 export default function Register({ navigation }) {
   // const [fullName, setFullName] = useState('');
@@ -23,29 +26,60 @@ export default function Register({ navigation }) {
   // Loading
   const [loading, setLoading] = useState(false);
 
+  const mapAuthCodeToMessage = authCode => {
+    switch (authCode) {
+      case 'auth/invalid-password':
+        return 'Password provided is not corrected';
+
+      case 'auth/invalid-email':
+        return 'Email provided is invalid';
+
+      case 'auth/email-already-in-use':
+        return 'Email sudah pernah digunakan oleh akun lain';
+
+      default:
+        return '';
+    }
+  };
+
   const onContinue = () => {
     console.log(form);
 
     setLoading(true);
-
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, form.email, form.password)
-      .then(userCredential => {
+      .then(success => {
         // Signed in
-        const user = userCredential.user;
+        const user = success.user;
         console.log('user ges', user);
-        // ...
         setLoading(false);
+        setForm('reset');
+
+        const data = {
+          fullName: '',
+          profession: '',
+          email: '',
+        };
+
+        // Tambah database
+        const db = getDatabase();
+        set(ref(db, 'users/' + success.user.uid + '/'), data);
+        console.log('register success', success.user.uid);
       })
       .catch(error => {
         const errorCode = error.code;
-        const errorMessage = error.message;
+        // const errorMessage = error.message;
         // ..
-        console.log('Code Error', errorCode);
-        console.log('Pesan Error', errorMessage);
         setLoading(false);
+        showMessage({
+          message: mapAuthCodeToMessage(errorCode),
+          type: 'default',
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+        console.log('errorCode: ', mapAuthCodeToMessage(errorCode));
       });
-    // () => navigation.navigate('UploadPhoto')
+    // () => navigation.navigate('UploadPhoto');
   };
   return (
     <>

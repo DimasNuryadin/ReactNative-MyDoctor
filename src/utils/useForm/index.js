@@ -8,6 +8,10 @@ export const useForm = initialValue => {
     values,
     // lalu return fungsi untuk mengubah value
     (formType, formValue) => {
+      // reset
+      if (formType === 'reset') {
+        return setValues(initialValue);
+      }
       // return value baru
       // Lalu copy value lama ...
       return setValues({ ...values, [formType]: formValue });

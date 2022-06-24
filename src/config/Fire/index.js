@@ -16,6 +16,7 @@
 
 // Ini adalah configurasi firebase versi 9
 import { initializeApp } from 'firebase/app';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyA83oaxxPfUKre-rzgNmuxrwj9rN-dpOfo',
@@ -24,8 +25,11 @@ const firebaseConfig = {
   storageBucket: 'my-doctor-acd4a.appspot.com',
   messagingSenderId: '759515297653',
   appId: '1:759515297653:web:ccac35113793163121053c',
+  databaseURL:
+    'https://my-doctor-acd4a-default-rtdb.asia-southeast1.firebasedatabase.app/',
 };
 
 const Fire = initializeApp(firebaseConfig);
+// const database = getDatabase(Fire);
 
 export default Fire;
