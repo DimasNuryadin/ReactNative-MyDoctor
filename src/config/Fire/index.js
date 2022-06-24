@@ -1,32 +1,31 @@
-// // Import the functions you need from the SDKs you need
-// import { initializeApp } from "firebase/app";
-// // TODO: Add SDKs for Firebase products that you want to use
-// // https://firebase.google.com/docs/web/setup#available-libraries
+// Ini adalah configurasi firebase versi 7
+// import { firebase } from 'firebase/app';
 
-// // Your web app's Firebase configuration
-// const firebaseConfig = {
-//   apiKey: "AIzaSyA83oaxxPfUKre-rzgNmuxrwj9rN-dpOfo",
-//   authDomain: "my-doctor-acd4a.firebaseapp.com",
-//   projectId: "my-doctor-acd4a",
-//   storageBucket: "my-doctor-acd4a.appspot.com",
-//   messagingSenderId: "759515297653",
-//   appId: "1:759515297653:web:ccac35113793163121053c"
-// };
+// firebase.initializeApp({
+//   apiKey: 'AIzaSyA83oaxxPfUKre-rzgNmuxrwj9rN-dpOfo',
+//   authDomain: 'my-doctor-acd4a.firebaseapp.com',
+//   projectId: 'my-doctor-acd4a',
+//   storageBucket: 'my-doctor-acd4a.appspot.com',
+//   messagingSenderId: '759515297653',
+//   appId: '1:759515297653:web:ccac35113793163121053c',
+// });
 
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
+// const Fire = firebase;
 
-import firebase from 'firebase';
+// export default Fire;
 
-firebase.initializeApp({
+// Ini adalah configurasi firebase versi 9
+import { initializeApp } from 'firebase/app';
+
+const firebaseConfig = {
   apiKey: 'AIzaSyA83oaxxPfUKre-rzgNmuxrwj9rN-dpOfo',
   authDomain: 'my-doctor-acd4a.firebaseapp.com',
   projectId: 'my-doctor-acd4a',
   storageBucket: 'my-doctor-acd4a.appspot.com',
   messagingSenderId: '759515297653',
   appId: '1:759515297653:web:ccac35113793163121053c',
-});
+};
 
-const Fire = firebase;
+const Fire = initializeApp(firebaseConfig);
 
 export default Fire;

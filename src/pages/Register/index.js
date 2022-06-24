@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Button, Gap, Header, Input } from '../../components';
 import { colors, useForm } from '../../utils';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 export default function Register({ navigation }) {
   // const [fullName, setFullName] = useState('');
@@ -19,7 +20,37 @@ export default function Register({ navigation }) {
 
   const onContinue = () => {
     console.log(form);
+    // Fire.auth()
+    //   .createUserWithEmailAndPassword(form.email, form.password)
+    //   .then(success => {
+    //     // Signed in
+    //     var user = success.user;
+    //     // ...
+    //     console.log('Register Success: ', success);
+    //     console.log('user ges', user);
+    //   })
+    //   .catch(error => {
+    //     const errorMessage = error.message;
+    //     // ..
+    //     console.log('Error Register: ', errorMessage);
+    //   });
     // () => navigation.navigate('UploadPhoto')
+
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, form.email, form.password)
+      .then(userCredential => {
+        // Signed in
+        const user = userCredential.user;
+        console.log('user ges', user);
+        // ...
+      })
+      .catch(error => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log('Code Error', errorCode);
+        console.log('Pesan Error', errorMessage);
+        // ..
+      });
   };
   return (
     <View style={styles.page}>
