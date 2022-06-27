@@ -1,10 +1,31 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
 import { Button, Gap, Header, Link } from '../../components';
-import { ICAddPhoto, ILNullPhoto } from '../../assets';
+import { ICAddPhoto, ICRemovePhoto, ILNullPhoto } from '../../assets';
 import { colors, fonts } from '../../utils';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { showMessage } from 'react-native-flash-message';
 
 export default function UploadPhoto({ navigation }) {
+  const [hasPhoto, setHasPhoto] = useState(false);
+  const [photo, setPhoto] = useState(ILNullPhoto);
+  const getImage = () => {
+    launchImageLibrary({}, callback => {
+      console.log(callback);
+      if (callback.didCancel || callback.error) {
+        showMessage({
+          message: 'Opps sepertinya anda tidak memilih fotonya',
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+      } else {
+        const source = { uri: callback.assets[0].uri };
+        setPhoto(source);
+        setHasPhoto(true);
+      }
+    });
+  };
+
   return (
     <View style={styles.page}>
       <Header
@@ -13,16 +34,18 @@ export default function UploadPhoto({ navigation }) {
       />
       <View style={styles.content}>
         <View style={styles.profile}>
-          <View style={styles.avatarWrapper}>
-            <Image source={ILNullPhoto} style={styles.avatar} />
-            <ICAddPhoto style={styles.icPhoto} />
-          </View>
+          <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}>
+            <Image source={photo} style={styles.avatar} />
+            {hasPhoto && <ICRemovePhoto style={styles.icPhoto} />}
+            {!hasPhoto && <ICAddPhoto style={styles.icPhoto} />}
+          </TouchableOpacity>
           <Gap height={26} />
           <Text style={styles.name}>Shayna Melinda</Text>
           <Text style={styles.profession}>Product Designer</Text>
         </View>
         <View>
           <Button
+            disable={!hasPhoto}
             title="Upload and Continue"
             onPress={() => navigation.replace('MainApp')}
           />
@@ -67,6 +90,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 110,
     height: 110,
+    borderRadius: 110 / 2,
   },
   icPhoto: {
     position: 'absolute',

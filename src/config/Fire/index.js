@@ -16,7 +16,6 @@
 
 // Ini adalah configurasi firebase versi 9
 import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyA83oaxxPfUKre-rzgNmuxrwj9rN-dpOfo',

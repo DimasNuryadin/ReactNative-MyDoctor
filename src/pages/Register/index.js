@@ -37,6 +37,8 @@ export default function Register({ navigation }) {
       case 'auth/email-already-in-use':
         return 'Email sudah pernah digunakan oleh akun lain';
 
+      case 'auth/network-request-failed':
+        return 'Gagal authentication, coba periksa koneksi anda';
       default:
         return '';
     }
@@ -56,9 +58,9 @@ export default function Register({ navigation }) {
         setForm('reset');
 
         const data = {
-          fullName: '',
-          profession: '',
-          email: '',
+          fullName: form.fullName,
+          profession: form.profession,
+          email: form.email,
         };
 
         // Tambah database
@@ -77,7 +79,7 @@ export default function Register({ navigation }) {
           backgroundColor: colors.error,
           color: colors.white,
         });
-        console.log('errorCode: ', mapAuthCodeToMessage(errorCode));
+        // console.log('errorCode: ', errorCode);
       });
     // () => navigation.navigate('UploadPhoto');
   };
