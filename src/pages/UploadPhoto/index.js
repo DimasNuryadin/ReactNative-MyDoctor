@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Gap, Header, Link } from '../../components';
 import { ICAddPhoto, ICRemovePhoto, ILNullPhoto } from '../../assets';
-import { colors, fonts } from '../../utils';
+import { colors, fonts, storeData } from '../../utils';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { showMessage } from 'react-native-flash-message';
 import { getDatabase, ref, update } from 'firebase/database';
@@ -15,28 +15,31 @@ export default function UploadPhoto({ navigation, route }) {
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(ILNullPhoto);
   const getImage = () => {
-    launchImageLibrary({ includeBase64: true }, callback => {
-      console.log(callback);
-      if (callback.didCancel || callback.error) {
-        showMessage({
-          message: 'Opps sepertinya anda tidak memilih fotonya',
-          backgroundColor: colors.error,
-          color: colors.white,
-        });
-      } else {
-        console.log('Respones getImage : ', callback);
+    launchImageLibrary(
+      { includeBase64: true, quality: 0.5, maxWidth: 200, maxHeight: 200 },
+      callback => {
+        if (callback.didCancel || callback.error) {
+          console.log(callback);
+          showMessage({
+            message: 'Opps sepertinya anda tidak memilih fotonya',
+            backgroundColor: colors.error,
+            color: colors.white,
+          });
+        } else {
+          console.log('Respones getImage : ', callback);
 
-        const source = { uri: callback.assets[0].uri };
-        setPhoto(source);
-        setHasPhoto(true);
+          const source = { uri: callback.assets[0].uri };
+          setPhoto(source);
+          setHasPhoto(true);
 
-        // Yang diperlukan adalah base64 dari photo untuk upload
-        // data:tipefile;base64, ${callback.base64}
-        setPhotoForDB(
-          `data:${callback.assets[0].type};base64, ${callback.assets[0].base64}`,
-        );
-      }
-    });
+          // Yang diperlukan adalah base64 dari photo untuk upload
+          // data:tipefile;base64, ${callback.base64}
+          setPhotoForDB(
+            `data:${callback.assets[0].type};base64, ${callback.assets[0].base64}`,
+          );
+        }
+      },
+    );
   };
 
   const uploadAndContinue = () => {
@@ -45,6 +48,12 @@ export default function UploadPhoto({ navigation, route }) {
     update(ref(db, 'users/' + uid + '/'), {
       photo: photoForDB,
     });
+
+    // Update local storage untuk photo
+    const data = route.params;
+    // key: photo, value: photoForDB
+    data.photo = photoForDB;
+    storeData('user', data);
 
     navigation.replace('MainApp');
   };
