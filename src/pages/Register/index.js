@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Gap, Header, Input, Loading } from '../../components';
-import { colors, useForm } from '../../utils';
+import { colors, storeData, useForm } from '../../utils';
 // Import Firebase
 import '../../config';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -52,8 +52,8 @@ export default function Register({ navigation }) {
     createUserWithEmailAndPassword(auth, form.email, form.password)
       .then(success => {
         // Signed in
-        const user = success.user;
-        console.log('user ges', user);
+        // const user = success.user;
+        // console.log('user ges', user);
         setLoading(false);
         setForm('reset');
 
@@ -61,12 +61,19 @@ export default function Register({ navigation }) {
           fullName: form.fullName,
           profession: form.profession,
           email: form.email,
+          uid: success.user.uid,
         };
 
         // Tambah database
         const db = getDatabase();
         set(ref(db, 'users/' + success.user.uid + '/'), data);
         console.log('register success', success.user.uid);
+
+        // Masukan data ke local storage
+        storeData('user', data);
+
+        // lalu pindah halaman dan kirim data melalui parameter
+        navigation.navigate('UploadPhoto', data);
       })
       .catch(error => {
         const errorCode = error.code;
@@ -81,7 +88,6 @@ export default function Register({ navigation }) {
         });
         // console.log('errorCode: ', errorCode);
       });
-    // () => navigation.navigate('UploadPhoto');
   };
   return (
     <>

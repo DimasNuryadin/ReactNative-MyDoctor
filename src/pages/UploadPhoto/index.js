@@ -5,12 +5,17 @@ import { ICAddPhoto, ICRemovePhoto, ILNullPhoto } from '../../assets';
 import { colors, fonts } from '../../utils';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { showMessage } from 'react-native-flash-message';
+import { getDatabase, ref, update } from 'firebase/database';
 
-export default function UploadPhoto({ navigation }) {
+export default function UploadPhoto({ navigation, route }) {
+  // Mengambil data dari page sebelumnya
+  const { fullName, profession, uid } = route.params;
+  const [photoForDB, setPhotoForDB] = useState('');
+
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(ILNullPhoto);
   const getImage = () => {
-    launchImageLibrary({}, callback => {
+    launchImageLibrary({ includeBase64: true }, callback => {
       console.log(callback);
       if (callback.didCancel || callback.error) {
         showMessage({
@@ -19,11 +24,29 @@ export default function UploadPhoto({ navigation }) {
           color: colors.white,
         });
       } else {
+        console.log('Respones getImage : ', callback);
+
         const source = { uri: callback.assets[0].uri };
         setPhoto(source);
         setHasPhoto(true);
+
+        // Yang diperlukan adalah base64 dari photo untuk upload
+        // data:tipefile;base64, ${callback.base64}
+        setPhotoForDB(
+          `data:${callback.assets[0].type};base64, ${callback.assets[0].base64}`,
+        );
       }
     });
+  };
+
+  const uploadAndContinue = () => {
+    // update database
+    const db = getDatabase();
+    update(ref(db, 'users/' + uid + '/'), {
+      photo: photoForDB,
+    });
+
+    navigation.replace('MainApp');
   };
 
   return (
@@ -40,14 +63,14 @@ export default function UploadPhoto({ navigation }) {
             {!hasPhoto && <ICAddPhoto style={styles.icPhoto} />}
           </TouchableOpacity>
           <Gap height={26} />
-          <Text style={styles.name}>Shayna Melinda</Text>
-          <Text style={styles.profession}>Product Designer</Text>
+          <Text style={styles.name}>{fullName}</Text>
+          <Text style={styles.profession}>{profession}</Text>
         </View>
         <View>
           <Button
             disable={!hasPhoto}
             title="Upload and Continue"
-            onPress={() => navigation.replace('MainApp')}
+            onPress={uploadAndContinue}
           />
           <Gap height={30} />
           <Link
