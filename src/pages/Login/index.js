@@ -15,14 +15,20 @@ export default function Login({ navigation }) {
   const [form, setForm] = useForm({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
-  // Munculin Error
+  // Custom Error
   const mapAuthCodeToMessage = authCode => {
     switch (authCode) {
       case 'auth/wrong-password':
         return 'Password Salah';
 
       case 'auth/user-not-found':
-        return 'Email tidak ditemukan';
+        return 'User tidak ditemukan';
+
+      case 'auth/invalid-email':
+        return 'Email yang anda masukan salah';
+
+      case 'auth/internal-error':
+        return 'Harap masukan password';
 
       default:
         return '';
@@ -37,10 +43,11 @@ export default function Login({ navigation }) {
       .then(res => {
         // Signed in
         const user = res.user;
-        console.log('success : ', res);
+        // console.log('success : ', res);
         // ...
         setLoading(false);
 
+        // Ambil data user dari database
         const dbRef = ref(getDatabase());
         get(child(dbRef, `users/${user.uid}`))
           .then(snapshot => {
@@ -58,7 +65,7 @@ export default function Login({ navigation }) {
           });
       })
       .catch(error => {
-        console.log('error : ', mapAuthCodeToMessage(error.code));
+        // console.log('error : ', error.code);
         showMessage({
           message: mapAuthCodeToMessage(error.code),
           type: 'default',

@@ -13,7 +13,7 @@ export default function HomeProfile({ onPress }) {
   useEffect(() => {
     // Ambil data user dari localstorage
     getData('user').then(res => {
-      console.log(res);
+      // console.log('Data dari local : ', res);
       const data = res;
       // ganti data photo dengan uri, menampilkan foto jenis base64
       data.photo = { uri: res.photo };

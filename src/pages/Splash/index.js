@@ -2,14 +2,29 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { ILLogo } from '../../assets';
 import { colors } from '../../utils/colors';
-import { fonts } from '../../utils';
+import { fonts, getData } from '../../utils';
+
+// Firebase
+import '../../config';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 // Props yang disediakan react navigation
 export default function Splash({ navigation }) {
   useEffect(() => {
     setTimeout(() => {
-      // replace() = user tidak bisa kembali ke page ini ketika tombol back ditekan, karena tidak menyimpan history sebelumnya
-      navigation.replace('GetStarted');
+      // Cek apakah sudah login atau belum
+      const auth = getAuth();
+      onAuthStateChanged(auth, user => {
+        if (user) {
+          // User Login
+          console.log(user);
+          navigation.replace('MainApp');
+        } else {
+          // User logout
+          // replace() = user tidak bisa kembali ke page ini ketika tombol back ditekan, karena tidak menyimpan history sebelumnya
+          navigation.replace('GetStarted');
+        }
+      });
     }, 3000);
   }, [navigation]);
 
