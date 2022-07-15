@@ -18,7 +18,7 @@ import {
 export default function Doctor({ navigation }) {
   useEffect(() => {
     getData('user').then(res => {
-      console.log('Data dari local : ', res);
+      // console.log('Data dari local : ', res);
     });
   }, []);
 

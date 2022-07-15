@@ -2,7 +2,13 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
 import { colors, fonts } from '../../../utils';
 
-export default function Input({ label, value, onChangeText, secureTextEntry }) {
+export default function Input({
+  label,
+  value,
+  onChangeText,
+  secureTextEntry,
+  disable,
+}) {
   const [border, setBorder] = useState(colors.border);
 
   const onFocusForm = () => {
@@ -22,6 +28,8 @@ export default function Input({ label, value, onChangeText, secureTextEntry }) {
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
+        editable={!disable}
+        selectTextOnFocus={!disable}
       />
     </View>
   );

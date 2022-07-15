@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import { ILLogo } from '../../assets';
 import { colors } from '../../utils/colors';
-import { fonts, getData } from '../../utils';
+import { fonts } from '../../utils';
 
 // Firebase
 import '../../config';
@@ -17,7 +17,7 @@ export default function Splash({ navigation }) {
       onAuthStateChanged(auth, user => {
         if (user) {
           // User Login
-          console.log(user);
+          // console.log(user);
           navigation.replace('MainApp');
         } else {
           // User logout
