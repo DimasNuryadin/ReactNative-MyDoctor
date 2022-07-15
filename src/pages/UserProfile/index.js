@@ -3,6 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { Header, Profile, List, Gap } from '../../components';
 import { colors, getData } from '../../utils';
 import { ILNullPhoto } from '../../assets';
+import { showMessage } from 'react-native-flash-message';
+
+// Firebase
+import '../../config';
+import { getAuth, signOut } from 'firebase/auth';
+const auth = getAuth();
 
 export default function UserProfile({ navigation }) {
   const [profile, setProfile] = useState({
@@ -10,6 +16,23 @@ export default function UserProfile({ navigation }) {
     profession: '',
     photo: ILNullPhoto,
   });
+
+  const onLogout = () => {
+    signOut(auth)
+      .then(() => {
+        showMessage({
+          message: 'Berhasil logout',
+          type: 'success',
+        });
+        navigation.replace('GetStarted');
+      })
+      .catch(error => {
+        showMessage({
+          message: error,
+          type: 'danger',
+        });
+      });
+  };
 
   useEffect(() => {
     getData('user').then(res => {
@@ -50,10 +73,11 @@ export default function UserProfile({ navigation }) {
         icon="rate"
       />
       <List
-        name="Help Center"
+        name="Sign Out"
         desc="Last updated yesterday"
         type="next"
         icon="help"
+        onPress={onLogout}
       />
     </View>
   );
