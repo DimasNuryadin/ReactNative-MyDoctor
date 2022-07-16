@@ -2,9 +2,8 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Gap, Header, Link } from '../../components';
 import { ICAddPhoto, ICRemovePhoto, ILNullPhoto } from '../../assets';
-import { colors, fonts, storeData } from '../../utils';
+import { colors, fonts, showError, storeData } from '../../utils';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { showMessage } from 'react-native-flash-message';
 import { getDatabase, ref, update } from 'firebase/database';
 
 export default function UploadPhoto({ navigation, route }) {
@@ -19,14 +18,10 @@ export default function UploadPhoto({ navigation, route }) {
       { includeBase64: true, quality: 0.5, maxWidth: 200, maxHeight: 200 },
       callback => {
         if (callback.didCancel || callback.error) {
-          console.log(callback);
-          showMessage({
-            message: 'Opps sepertinya anda tidak memilih fotonya',
-            backgroundColor: colors.error,
-            color: colors.white,
-          });
+          // console.log(callback);
+          showError('Opps sepertinya anda tidak memilih fotonya');
         } else {
-          console.log('Respones getImage : ', callback);
+          // console.log('Respones getImage : ', callback);
 
           const source = { uri: callback.assets[0].uri };
           setPhoto(source);

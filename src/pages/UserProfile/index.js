@@ -1,13 +1,12 @@
-import { StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Header, Profile, List, Gap } from '../../components';
-import { colors, getData } from '../../utils';
+import { StyleSheet, View } from 'react-native';
 import { ILNullPhoto } from '../../assets';
-import { showMessage } from 'react-native-flash-message';
+import { Gap, Header, List, Profile } from '../../components';
+import { colors, getData, showError, showSuccess } from '../../utils';
 
 // Firebase
-import '../../config';
 import { getAuth, signOut } from 'firebase/auth';
+import '../../config';
 const auth = getAuth();
 
 export default function UserProfile({ navigation }) {
@@ -20,17 +19,11 @@ export default function UserProfile({ navigation }) {
   const onLogout = () => {
     signOut(auth)
       .then(() => {
-        showMessage({
-          message: 'Berhasil logout',
-          type: 'success',
-        });
+        showSuccess('Berhasil logout');
         navigation.replace('GetStarted');
       })
       .catch(error => {
-        showMessage({
-          message: error,
-          type: 'danger',
-        });
+        showError(error);
       });
   };
 

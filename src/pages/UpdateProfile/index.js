@@ -1,20 +1,25 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { colors, getData, storeData } from '../../utils';
-import { Button, Gap, Header, Input, Profile } from '../../components';
-import { showMessage } from 'react-native-flash-message';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { Button, Gap, Header, Input, Profile } from '../../components';
+import {
+  colors,
+  getData,
+  showError,
+  showSuccess,
+  storeData,
+} from '../../utils';
 
 // Firebase
-import '../../config';
-import { getDatabase, ref, set } from 'firebase/database';
 import {
-  getAuth,
-  updatePassword,
-  reauthenticateWithCredential,
   EmailAuthProvider,
+  getAuth,
+  reauthenticateWithCredential,
+  updatePassword,
 } from 'firebase/auth';
+import { getDatabase, ref, set } from 'firebase/database';
 import { ILNullPhoto } from '../../assets';
+import '../../config';
 const auth = getAuth();
 
 export default function UpdateProfile({ navigation }) {
@@ -46,12 +51,7 @@ export default function UpdateProfile({ navigation }) {
   const update = () => {
     if (password.length > 0) {
       if (password.length < 6) {
-        showMessage({
-          message: 'password kurang dari 6 karakter',
-          type: 'default',
-          backgroundColor: colors.error,
-          color: 'white',
-        });
+        showError('password kurang dari 6 karakter');
       } else {
         updateProfileData();
         updatePasswordData();
@@ -72,23 +72,15 @@ export default function UpdateProfile({ navigation }) {
         // User re-authenticated.
         updatePassword(user, password)
           .then(() => {
-            showMessage({
-              message: 'Password berhasil diubah',
-              type: 'success',
-            });
+            showSuccess('Password berhasil diubah');
           })
           .catch(error => {
-            console.log('error : ', error);
+            // console.log('error : ', error);
           });
       })
       .catch(error => {
-        showMessage({
-          message: 'Password lama salah',
-          type: 'default',
-          backgroundColor: colors.error,
-          color: colors.white,
-        });
-        console.log('error reauthenticated', error);
+        showError('Password lama salah');
+        // console.log('error reauthenticated', error);
       });
   };
 
@@ -103,14 +95,8 @@ export default function UpdateProfile({ navigation }) {
         storeData('user', data);
       })
       .catch(error => {
-        // The write failed...
-        console.log(error);
-        showMessage({
-          message: error.message,
-          type: 'default',
-          backgroundColor: colors.error,
-          color: colors.white,
-        });
+        // console.log(error);
+        showError(error.message);
       });
   };
 
@@ -127,11 +113,7 @@ export default function UpdateProfile({ navigation }) {
       callback => {
         if (callback.didCancel || callback.error) {
           // console.log(callback);
-          showMessage({
-            message: 'Opps sepertinya anda tidak memilih fotonya',
-            backgroundColor: colors.error,
-            color: colors.white,
-          });
+          showError('Opps sepertinya anda tidak memilih fotonya');
         } else {
           // console.log('Respones getImage : ', callback);
 
