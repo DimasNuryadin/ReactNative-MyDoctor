@@ -1,3 +1,4 @@
 import Fire from './Fire';
+import FireError from './FireError';
 
-export { Fire };
+export { Fire, FireError };

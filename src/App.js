@@ -1,25 +1,39 @@
-import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import Router from './router';
+import React from 'react';
 import FlashMessage from 'react-native-flash-message';
 import { Loading } from './components';
+import Router from './router';
 
 // Redux
 // Provide mengumpulkan store yang sudah dibuat
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import store from './redux/store';
 
-export default function App() {
+const MainApp = () => {
   // Redux / state management
   // Agar state bisa digunakan secara global dan digunakan dimana saja
-  const [loading, setLoading] = useState(false);
+  // Memanggil store yang sudah dimiliki
+  const stateGlobal = useSelector(state => state);
+  // console.log('State global : ', stateGlobal);
+
   return (
-    <Provider store={store}>
+    <>
       <NavigationContainer>
         <Router />
       </NavigationContainer>
       <FlashMessage position="top" />
-      {loading && <Loading />}
+      {stateGlobal.loading && <Loading />}
+    </>
+  );
+};
+
+// Supaya mudah untuk mengkonsumsi storenya secara global (Redux)
+const app = () => {
+  return (
+    <Provider store={store}>
+      <MainApp />
     </Provider>
   );
-}
+};
+
+export default app;

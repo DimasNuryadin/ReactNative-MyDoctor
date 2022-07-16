@@ -1,13 +1,12 @@
+import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
-import { Button, Gap, Header, Input, Loading } from '../../components';
-import { colors, storeData, useForm } from '../../utils';
+import { Button, Gap, Header, Input } from '../../components';
+import { colors, showError, storeData, useForm } from '../../utils';
 // Import Firebase
-import '../../config';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { getDatabase, ref, set } from 'firebase/database';
-
-import { showMessage } from 'react-native-flash-message';
+import { useDispatch } from 'react-redux';
+import '../../config';
 
 export default function Register({ navigation }) {
   // const [fullName, setFullName] = useState('');
@@ -23,38 +22,20 @@ export default function Register({ navigation }) {
     password: '',
   });
 
-  // Loading
-  const [loading, setLoading] = useState(false);
-
-  const mapAuthCodeToMessage = authCode => {
-    switch (authCode) {
-      case 'auth/invalid-password':
-        return 'Password provided is not corrected';
-
-      case 'auth/invalid-email':
-        return 'Email provided is invalid';
-
-      case 'auth/email-already-in-use':
-        return 'Email sudah pernah digunakan oleh akun lain';
-
-      case 'auth/network-request-failed':
-        return 'Gagal authentication, coba periksa koneksi anda';
-      default:
-        return '';
-    }
-  };
+  // Redux, fungsi untuk mengubah reducer
+  const dispatch = useDispatch();
 
   const onContinue = () => {
-    console.log(form);
+    // console.log(form);
 
-    setLoading(true);
+    dispatch({ type: 'SET_LOADING', value: true });
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, form.email, form.password)
       .then(success => {
         // Signed in
         // const user = success.user;
         // console.log('user ges', user);
-        setLoading(false);
+        dispatch({ type: 'SET_LOADING', value: false });
         setForm('reset');
 
         const data = {
@@ -67,7 +48,7 @@ export default function Register({ navigation }) {
         // Tambah database
         const db = getDatabase();
         set(ref(db, 'users/' + success.user.uid + '/'), data);
-        console.log('register success', success.user.uid);
+        // console.log('register success', success.user.uid);
 
         // Masukan data ke local storage
         storeData('user', data);
@@ -76,16 +57,10 @@ export default function Register({ navigation }) {
         navigation.navigate('UploadPhoto', data);
       })
       .catch(error => {
-        const errorCode = error.code;
+        // const errorCode = error.code;
         // const errorMessage = error.message;
-        // ..
-        setLoading(false);
-        showMessage({
-          message: mapAuthCodeToMessage(errorCode),
-          type: 'default',
-          backgroundColor: colors.error,
-          color: colors.white,
-        });
+        dispatch({ type: 'SET_LOADING', value: false });
+        showError(error.code);
         // console.log('errorCode: ', errorCode);
       });
   };
@@ -126,7 +101,6 @@ export default function Register({ navigation }) {
           </ScrollView>
         </View>
       </View>
-      {loading && <Loading />}
     </>
   );
 }

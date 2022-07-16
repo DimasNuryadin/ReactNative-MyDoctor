@@ -1,51 +1,32 @@
+import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
 import { ILLogo } from '../../assets';
-import { Button, Gap, Input, Link, Loading } from '../../components';
-import { colors, fonts, storeData, useForm } from '../../utils';
+import { Button, Gap, Input, Link } from '../../components';
+import { colors, fonts, storeData, useForm, showError } from '../../utils';
 
 // Firebase
-import '../../config';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { getDatabase, ref, child, get } from 'firebase/database';
+import { child, get, getDatabase, ref } from 'firebase/database';
+import '../../config';
 
-import { showMessage } from 'react-native-flash-message';
+import { useDispatch } from 'react-redux';
 
 export default function Login({ navigation }) {
   const [form, setForm] = useForm({ email: '', password: '' });
-  const [loading, setLoading] = useState(false);
 
-  // Custom Error
-  const mapAuthCodeToMessage = authCode => {
-    switch (authCode) {
-      case 'auth/wrong-password':
-        return 'Password Salah';
-
-      case 'auth/user-not-found':
-        return 'User tidak ditemukan';
-
-      case 'auth/invalid-email':
-        return 'Email yang anda masukan salah';
-
-      case 'auth/internal-error':
-        return 'Harap masukan password';
-
-      default:
-        return '';
-    }
-  };
+  // Redux, dispatch : fungsi untuk merubah reducer
+  const dispatch = useDispatch();
 
   const login = () => {
     // console.log(form);
-    setLoading(true);
+    dispatch({ type: 'SET_LOADING', value: true });
     const auth = getAuth();
     signInWithEmailAndPassword(auth, form.email, form.password)
       .then(res => {
         // Signed in
         const user = res.user;
         // console.log('success : ', res);
-        // ...
-        setLoading(false);
+        dispatch({ type: 'SET_LOADING', value: false });
 
         // Ambil data user dari database
         const dbRef = ref(getDatabase());
@@ -53,11 +34,11 @@ export default function Login({ navigation }) {
           .then(snapshot => {
             // ada datanya ?
             if (snapshot.exists()) {
-              console.log('Data user : ', snapshot.val());
+              // console.log('Data user : ', snapshot.val());
               storeData('user', snapshot.val());
               navigation.replace('MainApp');
             } else {
-              console.log('No data available');
+              // console.log('No data available');
             }
           })
           .catch(error => {
@@ -66,50 +47,42 @@ export default function Login({ navigation }) {
       })
       .catch(error => {
         // console.log('error : ', error.code);
-        showMessage({
-          message: mapAuthCodeToMessage(error.code),
-          type: 'default',
-          color: colors.white,
-          backgroundColor: colors.error,
-        });
-        setLoading(false);
+        dispatch({ type: 'SET_LOADING', value: false });
+        showError(error.code);
       });
   };
 
   return (
-    <>
-      <View style={styles.page}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Gap height={40} />
-          <ILLogo />
-          <Text style={styles.title}>Masuk dan mulai berkonsultasi</Text>
-          <Input
-            label="Email Address"
-            value={form.email}
-            onChangeText={value => setForm('email', value)}
-          />
-          <Gap height={24} />
-          <Input
-            label="Password"
-            value={form.password}
-            onChangeText={value => setForm('password', value)}
-            secureTextEntry
-          />
-          <Gap height={10} />
-          <Link title="Forgot My Password" size={12} />
-          <Gap height={40} />
-          <Button title="Sign In" onPress={login} />
-          <Gap height={30} />
-          <Link
-            title="Create New Account"
-            size={16}
-            align="center"
-            onPress={() => navigation.navigate('Register')}
-          />
-        </ScrollView>
-      </View>
-      {loading && <Loading />}
-    </>
+    <View style={styles.page}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Gap height={40} />
+        <ILLogo />
+        <Text style={styles.title}>Masuk dan mulai berkonsultasi</Text>
+        <Input
+          label="Email Address"
+          value={form.email}
+          onChangeText={value => setForm('email', value)}
+        />
+        <Gap height={24} />
+        <Input
+          label="Password"
+          value={form.password}
+          onChangeText={value => setForm('password', value)}
+          secureTextEntry
+        />
+        <Gap height={10} />
+        <Link title="Forgot My Password" size={12} />
+        <Gap height={40} />
+        <Button title="Sign In" onPress={login} />
+        <Gap height={30} />
+        <Link
+          title="Create New Account"
+          size={16}
+          align="center"
+          onPress={() => navigation.navigate('Register')}
+        />
+      </ScrollView>
+    </View>
   );
 }
 
