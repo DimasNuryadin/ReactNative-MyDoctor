@@ -1,15 +1,31 @@
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { colors, fonts } from '../../utils';
-import {
-  DummyHospitals1,
-  DummyHospitals2,
-  DummyHospitals3,
-  ILHospitalBG,
-} from '../../assets';
+import { ILHospitalBG } from '../../assets';
 import { ListHospitals } from '../../components/molecules';
+import { colors, fonts } from '../../utils';
+
+// Firebase Database
+import { child, get, getDatabase, ref } from 'firebase/database';
+import '../../config';
+const dbRef = ref(getDatabase());
 
 export default function Hospitals() {
+  const [hospitals, setHospitals] = useState([]);
+
+  useEffect(() => {
+    get(child(dbRef, 'hospitals/'))
+      .then(res => {
+        if (res.exists()) {
+          // console.log(res.val());
+          setHospitals(res.val());
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
   return (
     <View style={styles.page}>
       <ImageBackground source={ILHospitalBG} style={styles.background}>
@@ -17,24 +33,17 @@ export default function Hospitals() {
         <Text style={styles.desc}>3 tersedia</Text>
       </ImageBackground>
       <View style={styles.content}>
-        <ListHospitals
-          type="Rumah Sakit"
-          name="Citra Bunga Merdeka"
-          address="Jln. Surya Sejahtera"
-          pic={DummyHospitals1}
-        />
-        <ListHospitals
-          type="Rumah Sakit"
-          name="Citra Bunga Merdeka"
-          address="Jln. Surya Sejahtera"
-          pic={DummyHospitals2}
-        />
-        <ListHospitals
-          type="Rumah Sakit"
-          name="Citra Bunga Merdeka"
-          address="Jln. Surya Sejahtera"
-          pic={DummyHospitals3}
-        />
+        {hospitals.map(item => {
+          return (
+            <ListHospitals
+              key={item.id}
+              type="euy"
+              name={item.name}
+              address={item.address}
+              pic={{ uri: item.image }}
+            />
+          );
+        })}
       </View>
     </View>
   );

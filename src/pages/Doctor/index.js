@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DoctorCategory,
   Gap,
@@ -7,7 +7,7 @@ import {
   NewsItems,
   RatedDoctor,
 } from '../../components';
-import { colors, fonts, getData } from '../../utils';
+import { colors, fonts } from '../../utils';
 import {
   DummyDoctor1,
   DummyDoctor2,
@@ -15,11 +15,26 @@ import {
   JSONCategoryDoctor,
 } from '../../assets';
 
+// Firebase Database
+import '../../config';
+import { getDatabase, ref, child, get } from 'firebase/database';
+const dbRef = ref(getDatabase());
+
 export default function Doctor({ navigation }) {
+  const [news, setNews] = useState([]);
   useEffect(() => {
-    getData('user').then(res => {
-      // console.log('Data dari local : ', res);
-    });
+    get(child(dbRef, 'news'))
+      .then(res => {
+        if (res.exists()) {
+          // console.log(res.val());
+          setNews(res.val());
+        } else {
+          console.log('No data available');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }, []);
 
   return (
@@ -73,9 +88,16 @@ export default function Doctor({ navigation }) {
             />
             <Text style={styles.sectionLabel}>Good News</Text>
           </View>
-          <NewsItems />
-          <NewsItems />
-          <NewsItems />
+          {news.map(item => {
+            return (
+              <NewsItems
+                key={item.id}
+                title={item.title}
+                date={item.date}
+                image={item.image}
+              />
+            );
+          })}
           <Gap height={30} />
         </ScrollView>
       </View>
