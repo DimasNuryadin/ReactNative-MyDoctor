@@ -37,7 +37,7 @@ export default function Hospitals() {
           return (
             <ListHospitals
               key={item.id}
-              type="euy"
+              type={item.type}
               name={item.name}
               address={item.address}
               pic={{ uri: item.image }}

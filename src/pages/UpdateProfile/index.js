@@ -110,20 +110,20 @@ export default function UpdateProfile({ navigation }) {
   const getImage = () => {
     launchImageLibrary(
       { includeBase64: true, quality: 0.5, maxWidth: 200, maxHeight: 200 },
-      callback => {
-        if (callback.didCancel || callback.error) {
-          // console.log(callback);
+      response => {
+        if (response.didCancel || response.error) {
+          // console.log(response);
           showError('Opps sepertinya anda tidak memilih fotonya');
         } else {
-          // console.log('Respones getImage : ', callback);
+          // console.log('Respones getImage : ', response);
 
-          const source = { uri: callback.assets[0].uri };
+          const source = { uri: response.assets[0].uri };
           setPhoto(source);
 
           // Yang diperlukan adalah base64 dari photo untuk upload
-          // data:tipefile;base64, ${callback.base64}
+          // data:tipefile;base64, ${response.base64}
           setPhotoForDB(
-            `data:${callback.assets[0].type};base64, ${callback.assets[0].base64}`,
+            `data:${response.assets[0].type};base64, ${response.assets[0].base64}`,
           );
         }
       },
