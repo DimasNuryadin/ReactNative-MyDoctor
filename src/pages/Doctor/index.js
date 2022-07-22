@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { DummyDoctor1, DummyDoctor2, DummyDoctor3 } from '../../assets';
 import {
   DoctorCategory,
   Gap,
@@ -24,15 +23,6 @@ import {
 import '../../config';
 const dbRef = ref(getDatabase());
 
-// orderByChild('rate') mengambil child rate
-// limitToFirst(3) : untuk mengambil 3 nilai yang terkecil
-// limitToLast(3) mengambil 3 nilai yang terbesar
-const topUserPostsRef = query(
-  ref(getDatabase(), 'doctors'),
-  orderByChild('rate'),
-  limitToLast(3),
-);
-
 export default function Doctor({ navigation }) {
   const [news, setNews] = useState([]);
   const [categoryDoctor, setCategoryDoctor] = useState([]);
@@ -45,20 +35,32 @@ export default function Doctor({ navigation }) {
   }, []);
 
   const getTopRatedDoctors = () => {
-    onValue(topUserPostsRef, res => {
-      // console.log(res.val());
-      // Memasukan object kedalam array
-      const oldData = res.val();
-      const data = [];
-      Object.keys(oldData).map(key => {
-        data.push({
-          id: key,
-          data: oldData[key],
+    // orderByChild('rate') mengambil child rate
+    // limitToFirst(3) : untuk mengambil 3 nilai yang terkecil
+    // limitToLast(3) mengambil 3 nilai yang terbesar
+    onValue(
+      query(
+        ref(getDatabase(), 'doctors'),
+        orderByChild('rate'),
+        limitToLast(3),
+      ),
+      res => {
+        // console.log(res.val());
+        // Memasukan object kedalam array, lalu memisahkan idUser dan data
+        const oldData = res.val();
+        const data = [];
+        // Object.keys(data) Looping daftar/list object, lalu maping
+        Object.keys(oldData).map(key => {
+          // push() : Memasukan objek kedalam array
+          data.push({
+            id: key,
+            data: oldData[key],
+          });
         });
-      });
-      console.log('data hasil parse', data);
-      setDoctors(data);
-    });
+        console.log('data hasil parse', data);
+        setDoctors(data);
+      },
+    );
   };
 
   const getCategoryDoctor = () => {
@@ -106,12 +108,12 @@ export default function Doctor({ navigation }) {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.category}>
                 <Gap width={16} />
-                {categoryDoctor.map(items => {
+                {categoryDoctor.map(item => {
                   return (
                     <DoctorCategory
-                      key={items.id}
-                      category={items.category}
-                      onPress={() => navigation.navigate('ChooseDoctor')}
+                      key={item.id}
+                      category={item.category}
+                      onPress={() => navigation.navigate('ChooseDoctor', item)}
                     />
                   );
                 })}
@@ -128,7 +130,7 @@ export default function Doctor({ navigation }) {
                   name={doctor.data.fullName}
                   desc={doctor.data.profession}
                   avatar={{ uri: doctor.data.photo }}
-                  onPress={() => navigation.navigate('DoctorProfile')}
+                  onPress={() => navigation.navigate('DoctorProfile', doctor)}
                 />
               );
             })}
