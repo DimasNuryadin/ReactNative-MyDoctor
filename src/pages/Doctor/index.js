@@ -57,7 +57,7 @@ export default function Doctor({ navigation }) {
             data: oldData[key],
           });
         });
-        console.log('data hasil parse', data);
+        // console.log('data hasil parse', data);
         setDoctors(data);
       },
     );
@@ -68,7 +68,13 @@ export default function Doctor({ navigation }) {
       .then(res => {
         if (res.exists()) {
           // console.log('doctor category', res.val());
-          setCategoryDoctor(res.val());
+          const data = res.val();
+          // Membersihkan array kosong
+          const filterData = data.filter(el => el !== null);
+
+          // console.log('data awal :', data);
+          // console.log('data filter :', filterData);
+          setCategoryDoctor(filterData);
         } else {
           console.log('No data available');
         }
@@ -83,7 +89,9 @@ export default function Doctor({ navigation }) {
       .then(res => {
         if (res.exists()) {
           // console.log('News category', res.val());
-          setNews(res.val());
+          const data = res.val();
+          const filterData = data.filter(el => el !== null);
+          setNews(filterData);
         } else {
           console.log('No data available');
         }

@@ -59,10 +59,10 @@ export default function ChooseDoctor({ navigation, route }) {
           <List
             key={doctor.id}
             type="next"
-            onPress={() => navigation.navigate('Chatting')}
             profile={{ uri: doctor.data.photo }}
             name={doctor.data.fullName}
             desc={doctor.data.gender}
+            onPress={() => navigation.navigate('DoctorProfile', doctor)}
           />
         );
       })}
