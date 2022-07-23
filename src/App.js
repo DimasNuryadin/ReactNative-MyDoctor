@@ -8,6 +8,7 @@ import Router from './router';
 // Provide mengumpulkan store yang sudah dibuat
 import { Provider, useSelector } from 'react-redux';
 import store from './redux/store';
+import { LogBox } from 'react-native';
 
 const MainApp = () => {
   // Redux / state management
@@ -16,6 +17,7 @@ const MainApp = () => {
   const stateGlobal = useSelector(state => state);
   // console.log('State global : ', stateGlobal);
 
+  LogBox.ignoreLogs(['AsyncStorage has been']);
   return (
     <>
       <NavigationContainer>

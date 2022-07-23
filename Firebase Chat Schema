@@ -1,0 +1,43 @@
+<!-- Page Chating -->
+- chating
+  - chatID --> (uid1_uid2)
+    - allChat
+      - dateChat 
+        - chat1 --> Dimas
+          - sentBy
+          - sentBy
+          - chatTime
+          - chatContent
+        - chat1 
+          - sentBy
+          - sentBy
+          - chatTime
+          - chatContent
+      - dateChat --> (2020-05-09)
+        - chat1
+          - sentBy
+          - sentBy
+          - chatTime
+          - chatContent
+        - chat1
+          - sentBy
+          - sentBy
+          - chatTime
+          - chatContent
+
+<!-- Page Messages -->
+- messages
+  - uid --> Dimas
+    - chatID
+      - lastChat
+      - lastChatDate
+      - uidPartner
+    - chatID
+      - lastChat
+      - lastChatDate
+      - uidPartner
+  - uid --> Dimas
+    - chatID
+      - lastChat
+      - lastChatDate
+      - uidPartner
