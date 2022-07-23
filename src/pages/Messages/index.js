@@ -5,7 +5,7 @@ import { colors, fonts, getData } from '../../utils';
 
 // Firebase
 import '../../config';
-import { getDatabase, ref, onValue } from 'firebase/database';
+import { getDatabase, ref, onValue, child, get } from 'firebase/database';
 const db = getDatabase();
 
 export default function Messages({ navigation }) {
@@ -15,18 +15,29 @@ export default function Messages({ navigation }) {
   useEffect(() => {
     getDataUserFromLocal();
     const urlHistory = `messages/${user.uid}/`;
-    onValue(ref(db, urlHistory), snapshot => {
+    onValue(ref(db, urlHistory), async snapshot => {
       // console.log('data history :', snapshot.val());
       if (snapshot.val()) {
         const oldData = snapshot.val();
         const data = [];
-        Object.keys(oldData).map(key => {
+        // async & await/asynchronous : menunggu hasilnya sampai dapat
+        const promises = await Object.keys(oldData).map(async key => {
+          // Memanggil data doctor
+          const urlUidDoctor = `doctors/${oldData[key].uidPartner}`;
+          const detailDoctor = await get(child(ref(db), urlUidDoctor));
+          // console.log('detail doctor', detailDoctor.val());
+
           data.push({
             id: key,
+            detailDoctor: detailDoctor.val(),
             ...oldData[key],
           });
         });
+
+        // Tunggu Promise yang ada di dlm promises
+        await Promise.all(promises);
         console.log('data baru', data);
+        // proses setData tidak bisa menunggu jadi harus pake Promise.all() untuk menunggu dulu
         setHistoryChat(data);
       }
     });
@@ -47,8 +58,8 @@ export default function Messages({ navigation }) {
           return (
             <List
               key={chat.id}
-              profile={chat.uidPartner}
-              name={chat.uidPartner}
+              profile={{ uri: chat.detailDoctor.photo }}
+              name={chat.detailDoctor.fullName}
               desc={chat.lastContentChat}
               onPress={() => navigation.navigate('Chatting')}
             />
