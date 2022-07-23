@@ -5,19 +5,54 @@ import { colors, fonts, getChatTime, getData, setDateChat } from '../../utils';
 
 // Firebase
 import '../../config';
-import { getDatabase, ref, set, push } from 'firebase/database';
+import { getDatabase, ref, set, push, onValue } from 'firebase/database';
 
 export default function Chatting({ navigation, route }) {
   const dataDoctor = route.params;
-  const [chatContent, setChatContent] = useState('');
+  const [chatContent, setChatContent] = useState(''); // berisi chat yang diinput user
   const [user, setUser] = useState({});
+  const [chatData, setChatData] = useState([]);
 
   useEffect(() => {
+    getDataUserFromLocal();
+    const db = getDatabase();
+    const chatID = `${user.uid}_${dataDoctor.id}`;
+    const urlFirebase = `chatting/${chatID}/allChat/`;
+    onValue(ref(db, urlFirebase), snapshot => {
+      // console.log('get data chat : ', snapshot.val());
+      if (snapshot.val()) {
+        const dataSnapshot = snapshot.val();
+        const allDataChat = [];
+        // Parsing data untuk memisahkan tanggal
+        Object.keys(dataSnapshot).map(key => {
+          // object data
+          const dataChat = dataSnapshot[key];
+          const newDataChat = [];
+
+          Object.keys(dataChat).map(itemChat => {
+            newDataChat.push({
+              id: itemChat,
+              data: dataChat[itemChat],
+            });
+          });
+
+          allDataChat.push({
+            id: key,
+            data: newDataChat,
+          });
+        });
+        console.log('all data chat :', allDataChat);
+        setChatData(allDataChat);
+      }
+    });
+  }, [dataDoctor.id, user.uid]);
+
+  const getDataUserFromLocal = () => {
     getData('user').then(res => {
-      console.log('user login', res);
+      // console.log('user login', res);
       setUser(res);
     });
-  }, []);
+  };
 
   const chatSend = () => {
     // console.log('chat yang akan dikirim : ', chatContent);
@@ -35,7 +70,7 @@ export default function Chatting({ navigation, route }) {
 
     const urlFirebase = `chatting/${chatID}/allChat/${setDateChat(today)}`;
     // console.log('data untuk dikirim', data);
-    console.log('url firebase : ', urlFirebase);
+    // console.log('url firebase : ', urlFirebase);
 
     // Kirim firebase
     const db = getDatabase();
@@ -59,10 +94,25 @@ export default function Chatting({ navigation, route }) {
       />
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.chatDate}>Senin, 21 Maret, 2020</Text>
-          <ChatItem isMe />
-          <ChatItem />
-          <ChatItem isMe />
+          {chatData.map(chat => {
+            return (
+              <View key={chat.id}>
+                <Text style={styles.chatDate}>{chat.id}</Text>
+                {chat.data.map(itemChat => {
+                  const isMe = itemChat.data.sendBy === user.uid;
+                  return (
+                    <ChatItem
+                      key={itemChat.id}
+                      isMe={isMe}
+                      text={itemChat.data.chatContent}
+                      date={itemChat.data.chatTime}
+                      photo={isMe ? null : { uri: dataDoctor.data.photo }}
+                    />
+                  );
+                })}
+              </View>
+            );
+          })}
         </ScrollView>
       </View>
       <InputChat

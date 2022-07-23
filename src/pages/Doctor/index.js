@@ -60,6 +60,9 @@ export default function Doctor({ navigation }) {
         // console.log('data hasil parse', data);
         setDoctors(data);
       },
+      {
+        onlyOnce: true,
+      },
     );
   };
 
