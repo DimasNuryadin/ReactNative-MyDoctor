@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { ChatItem, Header, InputChat } from '../../components';
-import { colors, fonts, getData } from '../../utils';
+import { colors, fonts, getChatTime, getData, setDateChat } from '../../utils';
 
 // Firebase
 import '../../config';
@@ -24,34 +24,23 @@ export default function Chatting({ navigation, route }) {
 
     // getTime() : Format timestamp
     const today = new Date();
-    const hour = today.getHours();
-    const minutes = today.getMinutes();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const date = today.getDate(); // ambil tanggal
     const data = {
       sendBy: user.uid,
-      chatDate: new Date().getTime(),
-      chatTime: `${hour}:${minutes} ${hour > 12 ? 'PM' : 'AM'}`,
+      chatDate: today.getTime(),
+      chatTime: getChatTime(today),
       chatContent: chatContent,
     };
+
+    const chatID = `${user.uid}_${dataDoctor.id}`;
+
+    const urlFirebase = `chatting/${chatID}/allChat/${setDateChat(today)}`;
     // console.log('data untuk dikirim', data);
-    // console.log(
-    //   'url firebase : ',
-    //   `chating/${user.uid}_${dataDoctor.data.uid}/allChat/${year}-${month}-${date}`,
-    // );
+    console.log('url firebase : ', urlFirebase);
+
     // Kirim firebase
     const db = getDatabase();
     // push() : Untuk mendapatkan key secara acak
-    set(
-      push(
-        ref(
-          db,
-          `chatting/${user.uid}_${dataDoctor.id}/allChat/${year}-${month}-${date}`,
-        ),
-      ),
-      data,
-    )
+    set(push(ref(db, urlFirebase)), data)
       .then(() => {
         setChatContent('');
       })
