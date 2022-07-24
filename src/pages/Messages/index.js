@@ -55,13 +55,17 @@ export default function Messages({ navigation }) {
       <View style={styles.content}>
         <Text style={styles.title}>Messages</Text>
         {historyChat.map(chat => {
+          const dataDoctor = {
+            id: chat.detailDoctor.uid,
+            data: chat.detailDoctor,
+          };
           return (
             <List
               key={chat.id}
               profile={{ uri: chat.detailDoctor.photo }}
               name={chat.detailDoctor.fullName}
               desc={chat.lastContentChat}
-              onPress={() => navigation.navigate('Chatting')}
+              onPress={() => navigation.navigate('Chatting', dataDoctor)}
             />
           );
         })}

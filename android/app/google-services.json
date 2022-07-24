@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "759515297653",
+    "firebase_url": "https://my-doctor-acd4a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "my-doctor-acd4a",
+    "storage_bucket": "my-doctor-acd4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759515297653:android:f9610969093199a821053c",
+        "android_client_info": {
+          "package_name": "com.mydoctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759515297653-1ken2rv09va2hcoa2hu8f0mpb0kc3n7u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp0ZhziJmAmo3zz8hMegJ4EdbBGBmHSdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759515297653-1ken2rv09va2hcoa2hu8f0mpb0kc3n7u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
