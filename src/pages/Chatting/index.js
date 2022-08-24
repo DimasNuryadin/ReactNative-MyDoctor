@@ -26,7 +26,7 @@ export default function Chatting({ navigation, route }) {
         // Parsing data untuk memisahkan tanggal
         Object.keys(dataSnapshot).map(key => {
           // object data
-          const dataChat = dataSnapshot[key];
+          const dataChat = dataSnapshot[key]; // berisi kode acak push()
           const newDataChat = [];
 
           Object.keys(dataChat).map(itemChat => {
@@ -37,7 +37,7 @@ export default function Chatting({ navigation, route }) {
           });
 
           allDataChat.push({
-            id: key,
+            id: key, // Berisi tanggal
             data: newDataChat,
           });
         });
